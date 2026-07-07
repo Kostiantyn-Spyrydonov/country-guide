@@ -13,5 +13,10 @@ const flagImg = document.getElementById("flag")
 const errTxt = document.getElementById("errorTxt")
 
 async function getCountry(countryName) {
-  const res = await fetch(`https://api.restcountries.com/countries/v5/`)
+  const response = await fetch(
+    `https://api.restcountries.com/countries/v5/names.common/${countryName}`,
+    { headers: { 'Authorization': `Bearer ${API_KEY}` } }
+  );
+  const data = await response.json();
+  return data.find(value => value.names.common === countryName) || data[0]
 }
