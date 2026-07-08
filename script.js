@@ -18,7 +18,9 @@ async function getCountry(countryName) {
     { headers: { 'Authorization': `Bearer ${API_KEY}` } }
   );
   const data = await response.json();
-  return data.find(value => value.names.common === countryName) || data[0]
+  console.log(data);
+
+  return data.data.objects.find(value => value.names.common.toLowerCase() === countryName.toLowerCase()) || data.data.objects[0]
 }
 
 searchBox.addEventListener("submit", async e => {
@@ -29,17 +31,17 @@ searchBox.addEventListener("submit", async e => {
     errTxt.textContent = ""
     try {
       const country = await getCountry(countryInput.value);
-      const { name, capital, area, population, currencies, languages, continents, flags } = country;
+      const { names, capitals, area, population, currencies, languages, continents, flag } = country;
       const currency = Object.values(currencies)[0];
-      countryName.textContent = name.common
-      capitalTxt.textContent = capital.join(", ")
-      areaTxt.textContent = area
+      countryName.textContent = names.common
+      capitalTxt.textContent = capitals.map(c => c.name).join(", ")
+      areaTxt.textContent = area.kilometers
       populationTxt.textContent = population
-      densityTxt.textContent = (population / area).toFixed(2)
+      densityTxt.textContent = (population / area.kilometers).toFixed(2)
       currencyTxt.textContent = `${currency.name} (${currency.symbol})`
-      languagesTxt.textContent = Object.values(languages).join(", ")
+      languagesTxt.textContent = languages.map(l => l.name).join(", ")
       continentTxt.textContent = continents.join(", ")
-      flagImg.src = flags.svg
+      flagImg.src = flag.url_svg
       if (!countryDetailsElem.classList.contains("active"))
         countryDetailsElem.classList.add("active")
     } catch {

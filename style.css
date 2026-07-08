@@ -89,6 +89,9 @@ body {
 
 .container .country-details .grid .flag {
   border-radius: 10px;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
 }
 
 .container .country-details .grid ul {
